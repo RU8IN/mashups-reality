@@ -6,42 +6,72 @@ import TasksCounter from '../tasks-counter'
 import ToDoList from '../todo-list/'
 
 
-export default function App() {
+export default class App extends React.Component {
 
-  const objects = [
-    { label: "Wee", important: false, key: "aaa" },
-    { label: "Woo", important: true, key: "ыыы" },
-    { label: "Wuu", important: false, key: "эээ" },
-    { label: "Waa", important: true, key: "ооо" },
-  ]
+  state = {
+    tasks: [
+      { label: "Wee", important: false, id: "aaa" },
+      { label: "Woo", important: true, id: "ыыы" },
+      { label: "Wuu", important: false, id: "эээ" },
+      { label: "Waa", important: true, id: "ооо" },]
+  }
 
-  return (
-    <div className="container">
-      <div className='row' >
-        <div className='col'>
-          <Header />
-        </div>
-        <div className='col'>
-          <TasksCounter toDo={2} done={5}/>
-        </div>
-      </div>
+  deleteTask = (id) => {
+    this.setState(
+      ({ tasks }) => {
+        return {
+          tasks: tasks.filter((task) => task.id !== id)
+        }
+      }
+    )
+  }
 
-      <div className='row'>
-        <div className='col'>
-          <SearchPanel />
-        </div>
-        <div className='col'>
-          <ItemStatusFilter />
-        </div>
-      </div>
+  addNewTask = () => {
+    let newTask = {
+      label: "hehe", important: false, id: this.state.tasks.length + 1
+    }
 
-      <div className='row'>
-        <div className='col pt-2'>
-          <ToDoList objects={objects} />
-        </div>
-      </div>
+    this.setState(({ tasks }) => {
+      return {
+        tasks: [...tasks, newTask]
+      }
+    })
+  }
 
-    </div>)
+  render() {
+    return (
+      <div className="container">
+        <div className='row' >
+          <div className='col'>
+            <Header />
+          </div>
+          <div className='col'>
+            <TasksCounter toDo={2} done={5} />
+          </div>
+
+        </div>
+
+        <div className='row d-flex flex-nowrap'>
+          <div className='col-8'>
+            <SearchPanel />
+          </div>
+          <div className='col'>
+            <ItemStatusFilter />
+          </div>
+          <div className='col-sm'>
+            <button type="button" className="btn btn-outline-success float-right btn-block" onClick={this.addNewTask}>Новая задача</button>
+          </div>
+        </div>
+
+        <div className='row'>
+          <div className='col pt-2'>
+            <ToDoList tasks={this.state.tasks} deleteTask={this.deleteTask} />
+          </div>
+        </div>
+
+      </div>)
+  }
+
 }
 
 

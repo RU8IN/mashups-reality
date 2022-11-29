@@ -26,11 +26,11 @@ export default class TodoListItem extends React.Component {
     }
 
     render() {
-        const { label, key } = this.props;
+        const { label, deleteTask} = this.props;
         const { done, important } = this.state;
         var classes = classNames({important, done})
 
-        return (<li key={key} className="list-group-item">
+        return (<li className="list-group-item">
             
             <span className={classes} onClick={this.onLabelClick}>{label}</span>
             <div className='btn-group-sm float-right'>
@@ -40,8 +40,10 @@ export default class TodoListItem extends React.Component {
                 </button>
 
                 {/* Красная кнопка */}
-                <button type="button" className='btn btn-outline-danger mx-1'>
-                    <i className='fa fa-trash-o' />
+                <button type="button" className='btn btn-outline-danger mx-1' onClick={() => {
+                    deleteTask(this.props.id)
+                }}>
+                    <i className='fa fa-trash-o'/>
                 </button>
 
             </div>
