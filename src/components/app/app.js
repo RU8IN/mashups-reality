@@ -4,17 +4,32 @@ import ItemStatusFilter from '../item-status-filter'
 import SearchPanel from '../search-panel'
 import TasksCounter from '../tasks-counter'
 import ToDoList from '../todo-list/'
-
+import ItemAddForm from '../item-add-form'
 
 export default class App extends React.Component {
 
+  maxId = 0
+
+  createTask = (label: String) => {
+    let task = {
+      label: label,
+      important: false,
+      done: false,
+      id: this.maxId++
+    }
+    return task
+  }
+
   state = {
     tasks: [
-      { label: "Wee", important: false, id: "aaa" },
-      { label: "Woo", important: true, id: "ыыы" },
-      { label: "Wuu", important: false, id: "эээ" },
-      { label: "Waa", important: true, id: "ооо" },]
+      this.createTask("Weee"),
+      this.createTask("Woo"),
+      this.createTask("Wuuu"),
+      this.createTask("Waaa"),
+    ]
   }
+
+
 
   deleteTask = (id) => {
     this.setState(
@@ -26,16 +41,41 @@ export default class App extends React.Component {
     )
   }
 
-  addNewTask = () => {
-    let newTask = {
-      label: "hehe", important: false, id: this.state.tasks.length + 1
-    }
+  addNewTask = (label: String) => {
+    let task = this.createTask(label)
 
     this.setState(({ tasks }) => {
       return {
-        tasks: [...tasks, newTask]
+        tasks: [...tasks, task]
       }
     })
+  }
+
+  toggleImportant = (id) => {
+
+    let new_tasks = this.state.tasks.map((task) => {
+      if (task.id === id) {
+        task.important = !task.important
+        return task
+      }
+      return task
+    })
+
+    this.setState( new_tasks )
+  }
+
+
+  toggleDone = (id) => {
+
+    let new_tasks = this.state.tasks.map((task) => {
+      if (task.id === id) {
+        task.done = !task.done
+        return task
+      }
+      return task
+    })
+
+    this.setState( new_tasks )
   }
 
   render() {
@@ -58,14 +98,17 @@ export default class App extends React.Component {
           <div className='col'>
             <ItemStatusFilter />
           </div>
+          {/* Кнопка для добавления новой задачи */}
           <div className='col-sm'>
-            <button type="button" className="btn btn-outline-success float-right btn-block" onClick={this.addNewTask}>Новая задача</button>
+            <ItemAddForm addNewTask={this.addNewTask} />
           </div>
         </div>
 
         <div className='row'>
           <div className='col pt-2'>
-            <ToDoList tasks={this.state.tasks} deleteTask={this.deleteTask} />
+            <ToDoList tasks={this.state.tasks} deleteTask={this.deleteTask} 
+            toggleImportant={this.toggleImportant}
+            toggleDone={this.toggleDone}/>
           </div>
         </div>
 
