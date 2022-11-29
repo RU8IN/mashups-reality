@@ -61,9 +61,8 @@ export default class App extends React.Component {
       return task
     })
 
-    this.setState( new_tasks )
+    this.setState(new_tasks)
   }
-
 
   toggleDone = (id) => {
 
@@ -75,27 +74,38 @@ export default class App extends React.Component {
       return task
     })
 
-    this.setState( new_tasks )
+    this.setState(new_tasks)
   }
 
+
+
   render() {
+
+    const { tasks } = this.state
+    const tasks_todo = tasks.filter(task => task.done).length
+    const tasks_done = tasks.length - tasks_todo
+
     return (
       <div className="container">
         <div className='row' >
           <div className='col'>
+            {/* Заголовок */}
             <Header />
           </div>
           <div className='col'>
-            <TasksCounter toDo={2} done={5} />
+            {/* Счётчик задач */}
+            <TasksCounter toDo={tasks_todo} done={tasks_done} />
           </div>
 
         </div>
 
         <div className='row d-flex flex-nowrap'>
           <div className='col-8'>
+            {/* Панель поиска */}
             <SearchPanel />
           </div>
           <div className='col'>
+            {/* Фильтр */}
             <ItemStatusFilter />
           </div>
           {/* Кнопка для добавления новой задачи */}
@@ -106,9 +116,9 @@ export default class App extends React.Component {
 
         <div className='row'>
           <div className='col pt-2'>
-            <ToDoList tasks={this.state.tasks} deleteTask={this.deleteTask} 
-            toggleImportant={this.toggleImportant}
-            toggleDone={this.toggleDone}/>
+            <ToDoList tasks={this.state.tasks} deleteTask={this.deleteTask}
+              toggleImportant={this.toggleImportant}
+              toggleDone={this.toggleDone} />
           </div>
         </div>
 
