@@ -1,18 +1,41 @@
 import React from 'react'
+import './todo-list-item.css'
+import classNames from 'classnames'
 
-export default function TodoListItem({ label, key, important }) {
-    const style = {
-        color: important ? "tomato" : "black"
+export default class TodoListItem extends React.Component {
+
+    state = {
+        done: false,
+        important: false
     }
 
-    return (
-        <li key={key} style={style} className="list-group-item">
+    onLabelClick = () => {
+        this.setState(({ done }) => {
+            return {
+                done: !done
+            }
+        })
+    }
 
-            <span important={important} style={style} >{label}</span>
+    onExclamationButtonClick = () => {
+        this.setState(({ important }) => {
+            return {
+                important: !important
+            }
+        })
+    }
 
+    render() {
+        const { label, key } = this.props;
+        const { done, important } = this.state;
+        var classes = classNames({important, done})
+
+        return (<li key={key} className="list-group-item">
+            
+            <span className={classes} onClick={this.onLabelClick}>{label}</span>
             <div className='btn-group-sm float-right'>
                 {/* Зелёная кнопкка */}
-                <button type="button" className='btn btn-outline-success mx-1'>
+                <button type="button" className='btn btn-outline-success mx-1' onClick={this.onExclamationButtonClick}>
                     <i className='fa fa-exclamation' />
                 </button>
 
@@ -23,5 +46,6 @@ export default function TodoListItem({ label, key, important }) {
 
             </div>
 
-        </li>)
-} 
+        </li>);
+    }
+}

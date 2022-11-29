@@ -1,0 +1,10 @@
+.important {
+    color: rgb(60, 154, 237);
+    font-weight: bold;
+}
+
+.done { 
+    text-decoration: line-through;
+}
+
+
