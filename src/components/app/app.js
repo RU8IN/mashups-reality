@@ -24,12 +24,11 @@ export default class App extends React.Component {
     tasks: [
       this.createTask("Weee"),
       this.createTask("Woo"),
-      this.createTask("Wuuu"),
-      this.createTask("Waaa"),
-    ]
+      this.createTask("Wueauua"),
+      this.createTask("Waeaua"),
+    ],
+    searching_term: ""
   }
-
-
 
   deleteTask = (id) => {
     this.setState(
@@ -51,11 +50,10 @@ export default class App extends React.Component {
     })
   }
 
-  toggleImportant = (id) => {
-
+  toggleParameter = (id, parameter: String) => {
     let new_tasks = this.state.tasks.map((task) => {
       if (task.id === id) {
-        task.important = !task.important
+        task[parameter] = !task[parameter]
         return task
       }
       return task
@@ -65,10 +63,17 @@ export default class App extends React.Component {
   }
 
   toggleDone = (id) => {
+    this.toggleParameter(id, 'done')
+  }
 
+  toggleImportant = (id) => {
+    this.toggleParameter(id, 'important')
+  }
+
+  toggleHidden = (id) => {
     let new_tasks = this.state.tasks.map((task) => {
       if (task.id === id) {
-        task.done = !task.done
+        task.hidden = !task.hidden
         return task
       }
       return task
@@ -77,13 +82,23 @@ export default class App extends React.Component {
     this.setState(new_tasks)
   }
 
+  searchByTerm = (tasks, term: String) => {
+    if (term.length === 0) {
+      return tasks  
+    }
+    return this.state.tasks.filter(({label}) => {return label.includes(term)})
+  }
 
+  onSearchChange = (searching_term: String) => {
+    this.setState({searching_term});
+  }
 
   render() {
 
-    const { tasks } = this.state
+    const { tasks, searching_term } = this.state
     const tasks_todo = tasks.filter(task => task.done).length
     const tasks_done = tasks.length - tasks_todo
+    const filtered_tasks = this.searchByTerm(tasks, searching_term)
 
     return (
       <div className="container">
@@ -102,26 +117,28 @@ export default class App extends React.Component {
         <div className='row d-flex flex-nowrap'>
           <div className='col-8'>
             {/* Панель поиска */}
-            <SearchPanel />
+            <SearchPanel tasks={tasks} onSearchChange={this.onSearchChange} />
           </div>
           <div className='col'>
             {/* Фильтр */}
             <ItemStatusFilter />
           </div>
-          {/* Кнопка для добавления новой задачи */}
-          <div className='col-sm'>
-            <ItemAddForm addNewTask={this.addNewTask} />
-          </div>
+
         </div>
 
         <div className='row'>
-          <div className='col pt-2'>
-            <ToDoList tasks={this.state.tasks} deleteTask={this.deleteTask}
+          <div className='col pt-3'>
+            <ToDoList tasks={filtered_tasks} deleteTask={this.deleteTask}
               toggleImportant={this.toggleImportant}
               toggleDone={this.toggleDone} />
           </div>
         </div>
-
+        <div className='row'>
+          {/* Кнопка для добавления новой задачи */}
+          <div className='col mt-3'>
+            <ItemAddForm addNewTask={this.addNewTask} />
+          </div>
+        </div>
       </div>)
   }
 

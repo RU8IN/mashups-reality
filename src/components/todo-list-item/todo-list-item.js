@@ -21,19 +21,19 @@ export default class TodoListItem extends React.Component {
     }
 
     render() {
-        const { id, label, deleteTask, done, important, toggleImportant, toggleDone } = this.props;
+        const { id, label, deleteTask, done, important, hidden = null, toggleImportant, toggleDone } = this.props;
         var classes = classNames({ important, done })
-        return (<li className="list-group-item">
+        return (<li className="list-group-item" hidden={hidden}>
 
             <span className={classes} onClick={() => { toggleDone(id) }}>{label}</span>
-            <div className='btn-group-sm float-right'>
+            <div className='btn-group float-right'>
                 {/* Зелёная кнопкка */}
-                <button type="button" className='btn btn-outline-success mx-1' onClick={() => { toggleImportant(id) }}>
+                <button type="button" className='btn btn-outline-success w-25' onClick={() => { toggleImportant(id) }}>
                     <i className='fa fa-exclamation' />
                 </button>
 
                 {/* Красная кнопка */}
-                <button type="button" className='btn btn-outline-danger mx-1' onClick={() => {
+                <button type="button" className='btn btn-outline-danger w-25' onClick={() => {
                     deleteTask(this.props.id)
                 }}>
                     <i className='fa fa-trash-o' />
