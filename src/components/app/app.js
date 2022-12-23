@@ -6,6 +6,7 @@ import TasksCounter from '../tasks-counter'
 import ToDoList from '../todo-list/'
 import ItemAddForm from '../item-add-form'
 
+
 export default class App extends React.Component {
 
   maxId = 0
@@ -27,7 +28,8 @@ export default class App extends React.Component {
       this.createTask("Wueauua"),
       this.createTask("Waeaua"),
     ],
-    searching_term: ""
+    searching_term: "",
+    filter: "all"
   }
 
   deleteTask = (id) => {
@@ -84,21 +86,40 @@ export default class App extends React.Component {
 
   searchByTerm = (tasks, term: String) => {
     if (term.length === 0) {
-      return tasks  
+      return tasks
     }
-    return this.state.tasks.filter(({label}) => {return label.includes(term)})
+    return this.state.tasks.filter(({ label }) => { return label.toLowerCase().includes(term.toLowerCase()) })
   }
 
   onSearchChange = (searching_term: String) => {
-    this.setState({searching_term});
+    this.setState({ searching_term });
+  }
+
+  onFilterChange = (filter) => {
+    console.log(filter)
+    this.setState({filter})
+  }
+
+  filterTasks = (tasks, filter) => {
+    switch (filter) {
+      case 'all':
+        return tasks
+      case 'active':
+        return tasks.filter(({done}) => !done)
+      case 'done':
+        return tasks.filter(({done}) => done)
+      default:
+        return tasks
+    }
   }
 
   render() {
 
-    const { tasks, searching_term } = this.state
-    const tasks_todo = tasks.filter(task => task.done).length
-    const tasks_done = tasks.length - tasks_todo
-    const filtered_tasks = this.searchByTerm(tasks, searching_term)
+    const { tasks, searching_term, filter } = this.state
+    const tasks_done = tasks.filter(task => task.done).length
+    const tasks_todo = tasks.length - tasks_done
+    const searched_tasks = this.searchByTerm(tasks, searching_term)
+    const filtered_tasks = this.filterTasks(searched_tasks, this.state.filter)
 
     return (
       <div className="container">
@@ -121,7 +142,7 @@ export default class App extends React.Component {
           </div>
           <div className='col'>
             {/* Фильтр */}
-            <ItemStatusFilter />
+            <ItemStatusFilter onFilterChange={this.onFilterChange} filter={filter}/>
           </div>
 
         </div>
